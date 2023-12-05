@@ -1,5 +1,6 @@
+// App.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { makeApiRequest } from "./apiService";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -7,7 +8,7 @@ const App = () => {
   const [signupData, setSignupData] = useState({
     email: "",
     password: "",
-    name: "", // Additional field for the name
+    name: "",
   });
 
   const [showRegisterForm, setShowRegisterForm] = useState(false);
@@ -32,15 +33,14 @@ const App = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("https://reqres.in/api/register", {
+      const response = await makeApiRequest("post", "register", {
         email: signupData.email,
         password: signupData.password,
         name: signupData.name,
       });
 
-      console.log("Registration successful:", response.data);
+      console.log("Registration successful:", response);
 
-      // Assuming successful registration
       setLoggedIn(true);
       setTimer(60);
     } catch (error) {
@@ -50,19 +50,17 @@ const App = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("https://reqres.in/api/login", {
+      const response = await makeApiRequest("post", "login", {
         email: signupData.email,
         password: signupData.password,
       });
 
-      console.log("Login successful:", response.data);
+      console.log("Login successful:", response);
 
-      // Assuming successful login
       setLoggedIn(true);
       setTimer(60);
     } catch (error) {
       console.error("Login failed:", error.message);
-      // If login fails, show the registration form
       setShowRegisterForm(true);
     }
   };
